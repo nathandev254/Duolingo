@@ -1,14 +1,12 @@
-import './App.css'
+import "./App.css";
+import { Button } from "./components/ui/button";
 
 function App() {
-  
-
   return (
     <>
-      <div className='font-nunito text-lg text-blue-700
-'>Duolingo</div>
+      <Button>Click me</Button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
