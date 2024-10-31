@@ -4,7 +4,7 @@ import { Button } from "./components/ui/button";
 function App() {
   return (
     <>
-      <Button>Click me</Button>
+      <Button size={"lg"} variant={"destructive"} >Click me</Button>
     </>
   );
 }
