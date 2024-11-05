@@ -1,10 +1,10 @@
 import "./App.css";
-import { Button } from "./components/ui/button";
-
 function App() {
+  console.log('logged')
   return (
     <>
-      <Button size={"lg"} variant={"destructive"} >Click me</Button>
+      <h1>Welcome to the Home Page!</h1>
+      Landing page
     </>
   );
 }
