@@ -4,21 +4,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App"; // Ensure case matches
 import './index.css';
 import Layout from "./Layout";
+import Buttons from "./buttonsPage"; // Updated to use uppercase
 
 const router = createBrowserRouter([
   {
-    element: <Layout />,  // This will wrap the routes defined in children
+    element: <Layout />,
     children: [
       {
-        path: "/",          // Route for the homepage
-        element: <App />,   // Renders the App component
+        path: "/",          
+        element: <App />,  
       },
-      // Additional routes that share the Layout can be added here
+      
     ],
   },
   {
-    path: "/buttons",      // Unique Buttons page
-    element: <Buttons />,   // Renders the Buttons component without Layout
+    path: "/buttons",      
+    element: <Buttons />,   
   },
 ]);
 
