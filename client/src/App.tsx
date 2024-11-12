@@ -1,10 +1,29 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./Layout";
+import Buttons from "./buttonsPage";
+import MarketingPage from "./MarketingPage";
 import "./App.css";
+
 function App() {
-  console.log('logged')
+  const router = createBrowserRouter([
+    {
+      element: <Layout />,
+      children: [
+        {
+          path: "/",
+          element: <MarketingPage />,
+        },
+      ],
+    },
+    {
+      path: "/buttons",
+      element: <Buttons />,
+    },
+  ]);
+
   return (
     <>
-      <h1>Welcome to the Home Page!</h1>
-      Landing page
+      <RouterProvider router={router}></RouterProvider>
     </>
   );
 }
