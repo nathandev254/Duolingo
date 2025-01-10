@@ -3,57 +3,73 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
+import multer from 'multer';
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(bodyParser.json()); // Parse JSON request bodies
-app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded request bodies
-app.use(morgan('dev')); // Log HTTP requests and errors
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/myapp', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
-// Custom middleware to log request details
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+
+// Multer configuration for file uploads
+const upload = multer({ dest: 'uploads/' });
+
+// Custom middleware to authenticate requests
 app.use((req: Request, res: Response, next: NextFunction) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized: Token missing' });
+    }
+    if (token !== process.env.SECRET_TOKEN) {
+        return res.status(403).json({ error: 'Forbidden: Invalid token' });
+    }
     next();
 });
 
 // Basic routes
 app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to the backend server!');
+    res.send('Welcome to the advanced backend server!');
 });
 
-// Example API route
-app.get('/api/status', (req: Request, res: Response) => {
-    res.json({ status: 'OK', timestamp: new Date() });
-});
-
-// Example route for handling user data
-app.post('/api/users', (req: Request, res: Response) => {
-    const { name, email } = req.body;
-    if (!name || !email) {
-        return res.status(400).json({ error: 'Name and email are required' });
+// API routes
+app.post('/api/login', (req: Request, res: Response) => {
+    const { username, password } = req.body;
+    if (username === 'admin' && password === process.env.ADMIN_PASSWORD) {
+        return res.json({ message: 'Login successful', token: process.env.SECRET_TOKEN });
     }
-    res.status(201).json({ message: 'User created successfully', user: { name, email } });
+    res.status(401).json({ error: 'Invalid credentials' });
 });
 
-// Example route with URL parameters
-app.get('/api/items/:id', (req: Request, res: Response) => {
-    const { id } = req.params;
-    res.json({ message: `Fetching item with ID: ${id}` });
-});
-
-// Example route with query parameters
-app.get('/api/search', (req: Request, res: Response) => {
-    const { query } = req.query;
-    if (!query) {
-        return res.status(400).json({ error: 'Query parameter is required' });
+app.post('/api/upload', upload.single('file'), (req: Request, res: Response) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'File is required' });
     }
-    res.json({ message: `Searching for: ${query}` });
+    res.json({ message: 'File uploaded successfully', file: req.file });
+});
+
+app.get('/api/data', async (req: Request, res: Response) => {
+    try {
+        // Replace with actual MongoDB query logic
+        const data = await mongoose.connection.db.collection('example').find({}).toArray();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching data' });
+    }
 });
 
 // Error handling middleware
