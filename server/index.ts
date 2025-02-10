@@ -77,36 +77,4 @@ const server = http.createServer((req, res) => {
   } else if (req.method === "POST" && path === "/add") {
     // Add a new node
     const data = query.get("data");
-    if (data) {
-      linkedList.add(data);
-      res.end(JSON.stringify({ message: `Added ${data}`, list: linkedList.display() }));
-    } else {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ error: "Data is required to add a node." }));
-    }
-  } else if (req.method === "DELETE" && path === "/remove") {
-    // Remove a node
-    const data = query.get("data");
-    if (data) {
-      const removed = linkedList.remove(data);
-      if (removed) {
-        res.end(JSON.stringify({ message: `Removed ${data}`, list: linkedList.display() }));
-      } else {
-        res.statusCode = 404;
-        res.end(JSON.stringify({ error: `Node with data ${data} not found.` }));
-      }
-    } else {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ error: "Data is required to remove a node." }));
-    }
-  } else {
-    res.statusCode = 404;
-    res.end(JSON.stringify({ error: "Invalid endpoint." }));
-  }
-});
-
-// Start the server
-const PORT = 3000;
-server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+   
