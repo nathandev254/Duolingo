@@ -63,18 +63,3 @@ class LinkedList {
 // Create a linked list instance
 const linkedList = new LinkedList();
 
-// Create an HTTP server
-const server = http.createServer((req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const path = url.pathname;
-  const query = url.searchParams;
-
-  res.setHeader("Content-Type", "application/json");
-
-  if (req.method === "GET" && path === "/display") {
-    // Display all nodes
-    res.end(JSON.stringify({ list: linkedList.display() }));
-  } else if (req.method === "POST" && path === "/add") {
-    // Add a new node
-    const data = query.get("data");
-   
