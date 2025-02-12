@@ -28,38 +28,3 @@ class LinkedList {
     }
   }
 
-  // Remove a node from the linked list
-  remove(data) {
-    if (!this.head) return false;
-    if (this.head.data === data) {
-      this.head = this.head.next;
-      return true;
-    }
-
-    let current = this.head;
-    while (current.next && current.next.data !== data) {
-      current = current.next;
-    }
-
-    if (current.next) {
-      current.next = current.next.next;
-      return true;
-    }
-    return false;
-  }
-
-  // Display all elements in the linked list
-  display() {
-    const elements = [];
-    let current = this.head;
-    while (current) {
-      elements.push(current.data);
-      current = current.next;
-    }
-    return elements;
-  }
-}
-
-// Create a linked list instance
-const linkedList = new LinkedList();
-
